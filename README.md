@@ -161,6 +161,14 @@ The FastAPI Swagger UI exposes the governed agent, tool-call, audit, and approva
 
 ---
 
+### Successful governed agent request
+
+A fan support agent asks for tickets and venue policy information. The gateway routes the request through allowed tools and returns a structured response.
+
+![Successful Agent Request](docs/screenshots/successful-agent-request.png)
+
+---
+
 ### Permission denied example
 
 A guest attempting to access a protected fan profile is denied by the permission layer.
