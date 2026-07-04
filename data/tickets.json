@@ -1,0 +1,29 @@
+[
+  {
+    "ticket_id": "tix_5001",
+    "event_id": "evt_1001",
+    "section": "114",
+    "row": "G",
+    "available_seats": 2,
+    "price_per_seat": 85.00,
+    "status": "available"
+  },
+  {
+    "ticket_id": "tix_5002",
+    "event_id": "evt_1001",
+    "section": "201",
+    "row": "B",
+    "available_seats": 4,
+    "price_per_seat": 52.00,
+    "status": "available"
+  },
+  {
+    "ticket_id": "tix_5003",
+    "event_id": "evt_1002",
+    "section": "Lower Bowl",
+    "row": "J",
+    "available_seats": 2,
+    "price_per_seat": 120.00,
+    "status": "available"
+  }
+]

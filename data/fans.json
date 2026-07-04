@@ -1,0 +1,20 @@
+[
+  {
+    "fan_id": "fan_001",
+    "name": "Jordan Lee",
+    "membership_tier": "gold",
+    "favorite_team": "Northstar Foxes",
+    "favorite_players": ["Avery Cole", "Marcus Reed"],
+    "preferences": ["lower_bowl", "weekend_games", "family_events"],
+    "last_ticket_purchase": "2026-06-18"
+  },
+  {
+    "fan_id": "fan_002",
+    "name": "Maya Patel",
+    "membership_tier": "silver",
+    "favorite_team": "Northstar Foxes",
+    "favorite_players": ["Elena Brooks"],
+    "preferences": ["accessible_seating", "parking_pass", "early_entry"],
+    "last_ticket_purchase": "2026-06-25"
+  }
+]
