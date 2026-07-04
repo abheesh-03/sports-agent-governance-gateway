@@ -1,16 +1,10 @@
 # Sports Agent Governance Gateway
 
-A portfolio-level project that simulates how a sports organization could safely
-let AI agents interact with business systems such as ticketing, schedules,
-content libraries, fan profiles, and venue policies.
+A portfolio-level backend project that simulates how a sports organization could safely let AI agents interact with business systems such as ticketing, schedules, content libraries, fan profiles, and venue policies.
 
-> **Core idea:** AI agents should not have unrestricted access to business
-> systems. They need permissions, tool boundaries, audit logs, risk scoring, and
-> human approval for sensitive actions.
+> **Core idea:** AI agents should not have unrestricted access to business systems. They need permissions, tool boundaries, audit logs, risk scoring, and human approval for sensitive actions.
 
-The project is built around a **fictional** sports organization called
-**Northstar Athletics**. It does **not** use real client data, real sports team
-data, or real ticketing APIs. All data is fake and generated inside this repo.
+The project is built around a **fictional** sports organization called **Northstar Athletics**. It does **not** use real client data, real sports team data, or real ticketing APIs. All data is fake and generated inside this repository.
 
 ---
 
@@ -18,15 +12,20 @@ data, or real ticketing APIs. All data is fake and generated inside this repo.
 
 Instead of letting an agent call any system directly, this gateway decides:
 
-- what tools the agent can call
-- whether the user's role has permission
-- whether the action is low, medium, or high risk
-- whether human approval is required
-- what gets logged for audit purposes
-- what safe, structured response is returned
+* what tools the agent can call
+* whether the user's role has permission
+* whether the action is low, medium, or high risk
+* whether human approval is required
+* what gets logged for audit purposes
+* what safe, structured response is returned
 
-Every tool call flows through **permissions → risk scoring → approval routing →
-audit logging** before anything executes.
+Every tool call flows through:
+
+```text
+permissions → risk scoring → approval routing → audit logging → execution
+```
+
+This makes the gateway a controlled middleware layer between an AI agent and simulated sports business systems.
 
 ---
 
@@ -54,41 +53,49 @@ Approved Tool Execution
 Structured Response
 ```
 
-See [`docs/architecture.md`](docs/architecture.md) for a layer-by-layer
-explanation and [`docs/governance_model.md`](docs/governance_model.md) for the
-governance rules.
+See [`docs/architecture.md`](docs/architecture.md) for a layer-by-layer explanation and [`docs/governance_model.md`](docs/governance_model.md) for the governance rules.
 
 ---
 
 ## Roles
 
-| Role                | Allowed behavior                                      |
-| ------------------- | ----------------------------------------------------- |
-| `guest`             | Search public schedule and policies                   |
-| `fan_support_agent` | Search policies, tickets, schedule, draft responses   |
-| `content_editor`    | Search content records                                |
-| `ticketing_manager` | Search tickets/schedule and request ticket holds      |
-| `admin`             | Access all tools, approvals, and audit logs           |
+| Role                | Allowed behavior                                        |
+| ------------------- | ------------------------------------------------------- |
+| `guest`             | Search public schedule and venue policies               |
+| `fan_support_agent` | Search policies, tickets, schedule, and draft responses |
+| `content_editor`    | Search content records                                  |
+| `ticketing_manager` | Search tickets/schedule and request ticket holds        |
+| `admin`             | Access all tools, approvals, and audit logs             |
 
-## Tools & risk levels
+---
+
+## Tools and risk levels
 
 | Tool                    | Risk   | Approval required |
 | ----------------------- | ------ | ----------------- |
 | `get_schedule`          | low    | no                |
 | `search_policy`         | low    | no                |
 | `search_content`        | low    | no                |
-| `lookup_fan_profile`    | medium | no (logged)       |
+| `lookup_fan_profile`    | medium | no, but logged    |
 | `search_ticket_options` | medium | no                |
 | `draft_fan_response`    | medium | no                |
-| `request_ticket_hold`   | high   | **yes**           |
+| `request_ticket_hold`   | high   | yes               |
 
 ---
 
 ## Tech stack
 
-Python 3.10+, FastAPI, Uvicorn, Pydantic, SQLAlchemy, SQLite (default), Pytest,
-Docker + Docker Compose. **No paid LLM APIs are required** — version 1 uses
-deterministic keyword routing and rule-based agent simulation.
+* Python 3.10+
+* FastAPI
+* Uvicorn
+* Pydantic
+* SQLAlchemy
+* SQLite by default
+* Pytest
+* Docker
+* Docker Compose
+
+No paid LLM APIs are required. Version 1 uses deterministic keyword routing and rule-based agent simulation so the project can run fully locally.
 
 ---
 
@@ -99,14 +106,14 @@ python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-# (optional) create tables and print a fake-data summary
+# Optional: create tables and print a fake-data summary
 python -m scripts.seed_data
 
-# run the API
+# Run the API
 uvicorn app.main:app --reload
 ```
 
-Then open the interactive docs:
+Open the interactive API docs:
 
 ```text
 http://localhost:8000/docs
@@ -128,21 +135,23 @@ docker compose up --build
 
 ## API endpoints
 
-| Method | Path                              | Description                          |
-| ------ | --------------------------------- | ------------------------------------ |
-| GET    | `/`                               | Service metadata                     |
-| GET    | `/health`                         | Health check                         |
-| GET    | `/tools`                          | List registered tools + metadata     |
-| POST   | `/agent/request`                  | Natural-language agent request       |
-| POST   | `/tools/call`                     | Single governed tool call            |
-| GET    | `/audit-logs`                     | Recent audit logs (filterable)       |
-| GET    | `/approvals/pending`              | Pending approval requests            |
-| POST   | `/approvals/{approval_id}/approve`| Approve a pending request            |
-| POST   | `/approvals/{approval_id}/reject` | Reject a pending request             |
+| Method | Path                               | Description                        |
+| ------ | ---------------------------------- | ---------------------------------- |
+| GET    | `/`                                | Service metadata                   |
+| GET    | `/health`                          | Health check                       |
+| GET    | `/tools`                           | List registered tools and metadata |
+| POST   | `/agent/request`                   | Natural-language agent request     |
+| POST   | `/tools/call`                      | Single governed tool call          |
+| GET    | `/audit-logs`                      | Recent audit logs                  |
+| GET    | `/approvals/pending`               | Pending approval requests          |
+| POST   | `/approvals/{approval_id}/approve` | Approve a pending request          |
+| POST   | `/approvals/{approval_id}/reject`  | Reject a pending request           |
 
-Full curl examples live in [`docs/api_examples.md`](docs/api_examples.md).
+Full curl examples are available in [`docs/api_examples.md`](docs/api_examples.md).
 
-### Example: agent request
+---
+
+## Example: agent request
 
 ```bash
 curl -X POST http://localhost:8000/agent/request \
@@ -154,7 +163,13 @@ curl -X POST http://localhost:8000/agent/request \
   }'
 ```
 
-### Example: blocked request (guest tries a fan-profile lookup)
+The gateway routes this request through the allowed tools for schedule, ticket search, and policy lookup.
+
+---
+
+## Example: blocked request
+
+A guest user trying to access a fan profile should be denied.
 
 ```bash
 curl -X POST http://localhost:8000/tools/call \
@@ -163,12 +178,26 @@ curl -X POST http://localhost:8000/tools/call \
     "user_id": "guest_001",
     "user_role": "guest",
     "tool_name": "lookup_fan_profile",
-    "input_payload": { "fan_id": "fan_001" }
+    "input_payload": {
+      "fan_id": "fan_001"
+    }
   }'
-# -> decision: "blocked_permission_denied", status: "blocked"
 ```
 
-### Example: high-risk request routed for approval
+Expected decision:
+
+```json
+{
+  "decision": "blocked_permission_denied",
+  "status": "blocked"
+}
+```
+
+---
+
+## Example: high-risk action routed for approval
+
+A ticketing manager can request a ticket hold, but the action is high risk and requires approval.
 
 ```bash
 curl -X POST http://localhost:8000/tools/call \
@@ -177,9 +206,37 @@ curl -X POST http://localhost:8000/tools/call \
     "user_id": "manager_001",
     "user_role": "ticketing_manager",
     "tool_name": "request_ticket_hold",
-    "input_payload": { "ticket_id": "tix_5001", "seat_count": 2 }
+    "input_payload": {
+      "ticket_id": "tix_5001",
+      "seat_count": 2
+    }
   }'
-# -> decision: "pending_approval", approval_required: true
+```
+
+Expected decision:
+
+```json
+{
+  "decision": "pending_approval",
+  "approval_required": true,
+  "status": "pending_approval"
+}
+```
+
+---
+
+## View pending approvals
+
+```bash
+curl http://localhost:8000/approvals/pending
+```
+
+---
+
+## View audit logs
+
+```bash
+curl http://localhost:8000/audit-logs
 ```
 
 ---
@@ -187,39 +244,73 @@ curl -X POST http://localhost:8000/tools/call \
 ## Project structure
 
 ```text
-app/       FastAPI app, config, DB, models, schemas, CRUD
-gateway/   tool registry, permissions, risk, audit, approvals, router
-tools/     simulated business-system tools (read fake JSON data)
-data/      fake JSON data (schedule, policies, tickets, fans, content)
-scripts/   seed / init helper
-tests/     pytest suite
-docs/      architecture, governance, API examples, fake data, interview notes
+app/        FastAPI app, config, database, models, schemas, CRUD
+gateway/    tool registry, permissions, risk scoring, audit, approvals, router
+tools/      simulated business-system tools backed by fake JSON data
+data/       fake JSON data for schedule, policies, tickets, fans, and content
+scripts/    seed / initialization helper
+tests/      pytest suite
+docs/       architecture, governance model, API examples, fake data notes
 ```
 
 ---
 
 ## Fake data disclaimer
 
-All data is fictional. **Northstar Athletics** is an invented organization. No
-real team, league, venue, ticketing system, CRM, or fan data is used. See
-[`docs/fake_data.md`](docs/fake_data.md) and [`data/README.md`](data/README.md).
+All data is fictional.
+
+**Northstar Athletics** is an invented organization. No real team, league, venue, ticketing system, CRM, or fan data is used.
+
+See [`docs/fake_data.md`](docs/fake_data.md) and [`data/README.md`](data/README.md) for details.
 
 ---
 
-## Interview framing
+## Design goals
 
-> I built a portfolio-level sports agent governance gateway to explore how AI
-> agents can safely interact with business systems. The project uses a fictional
-> sports organization and fake data. Every tool call goes through permissions,
-> risk scoring, audit logging, and human approval when needed. The goal was to
-> show that useful AI agents need governance, not just model output.
+This project is designed to show:
 
-More in [`docs/interview_notes.md`](docs/interview_notes.md).
+* governed AI tool access
+* role-based permission checks
+* risk-aware execution
+* human-in-the-loop approval for sensitive actions
+* auditability for every agent action
+* modular backend architecture
+* sports business workflow simulation using fake data
+
+The main focus is not the language model itself. The focus is the control layer around agent actions.
+
+---
+
+## Limitations
+
+This project is intentionally scoped as a local portfolio system.
+
+It does not currently include:
+
+* real authentication
+* real ticketing APIs
+* real CRM integration
+* real payment actions
+* external LLM tool-calling
+* production deployment configuration
+* real fan or customer data
+
+The current version uses deterministic routing so it can run without API keys or external services.
 
 ---
 
 ## Future improvements
 
-LangGraph workflow routing, Claude/OpenAI tool-calling, JWT auth, real RBAC
-middleware, PostgreSQL + pgvector search, a React approvals dashboard, Slack/email
+* Add LangGraph for explicit workflow routing
+* Add Claude or OpenAI tool-calling integration
+* Add JWT authentication
+* Add real RBAC middleware
+* Add PostgreSQL support
+* Add pgvector for policy/content search
+* Add a React dashboard for approvals
+* Add Slack or email approval notifications
+* Add rate limiting
+* Add OpenTelemetry tracing
+* Deploy to Render, Railway, or AWS ECS
+h, a React approvals dashboard, Slack/email
 approval notifications, rate limiting, and OpenTelemetry tracing.
