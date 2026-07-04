@@ -63,7 +63,7 @@ See [`docs/architecture.md`](docs/architecture.md) for a layer-by-layer explanat
 | ------------------- | ------------------------------------------------------- |
 | `guest`             | Search public schedule and venue policies               |
 | `fan_support_agent` | Search policies, tickets, schedule, and draft responses |
-| `content_editor`    | Search content records                                  |
+| `content_editor`    | Search content records and classify visual assets       |
 | `ticketing_manager` | Search tickets/schedule and request ticket holds        |
 | `admin`             | Access all tools, approvals, and audit logs             |
 
@@ -79,7 +79,13 @@ See [`docs/architecture.md`](docs/architecture.md) for a layer-by-layer explanat
 | `lookup_fan_profile`    | medium | no, but logged    |
 | `search_ticket_options` | medium | no                |
 | `draft_fan_response`    | medium | no                |
+| `classify_visual_asset` | medium | no                |
 | `request_ticket_hold`   | high   | yes               |
+
+> **Note on the vision tool:** This repo does not run a PyTorch model directly.
+> The `classify_visual_asset` tool simulates a governed call to an external
+> PyTorch vision service, matching the separate multimodal vision pipeline
+> project. It uses fake visual asset data only and adds no CV dependencies here.
 
 ---
 

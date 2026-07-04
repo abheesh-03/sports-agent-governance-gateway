@@ -17,6 +17,7 @@ Sports Agent Governance Gateway.
 | `tickets.json`          | Fake ticket inventory tied to events.              |
 | `fans.json`             | Fictional fan profiles (invented people).          |
 | `content_library.json`  | Fake content records (clips, interviews, posts).   |
+| `visual_assets.json`    | Fake visual assets with pre-computed classifications. |
 
 You can freely edit these files locally to experiment with the gateway. The tools
 read directly from these JSON files at request time, so no rebuild is required.

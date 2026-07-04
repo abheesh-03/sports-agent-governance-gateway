@@ -34,6 +34,18 @@ def test_fan_support_agent_cannot_request_ticket_hold():
     assert reason == "role_not_allowed"
 
 
+def test_content_editor_can_classify_visual_asset():
+    allowed, reason = is_tool_allowed("content_editor", "classify_visual_asset")
+    assert allowed is True
+    assert reason == "allowed"
+
+
+def test_guest_cannot_classify_visual_asset():
+    allowed, reason = is_tool_allowed("guest", "classify_visual_asset")
+    assert allowed is False
+    assert reason == "role_not_allowed"
+
+
 def test_unknown_tool_is_rejected():
     allowed, reason = is_tool_allowed("admin", "delete_everything")
     assert allowed is False
