@@ -4,6 +4,7 @@ from tools.policies import search_policy
 from tools.responses import draft_fan_response
 from tools.schedule import get_schedule
 from tools.tickets import request_ticket_hold, search_ticket_options
+from tools.visual_assets import classify_visual_asset
 
 
 def test_get_schedule_returns_events():
@@ -52,3 +53,17 @@ def test_draft_fan_response_needs_review():
     draft = draft_fan_response({"ticket_options": [{"section": "114"}]})
     assert draft["needs_review"] is True
     assert "ticket" in draft["draft"].lower()
+
+
+def test_classify_visual_asset_found():
+    result = classify_visual_asset("asset_001")
+    assert result["asset_id"] == "asset_001"
+    assert result["predicted_class"] == "event"
+    assert result["model_source"] == "simulated_pytorch_vision_service"
+    assert "sponsor_board" in result["visual_tags"]
+
+
+def test_classify_visual_asset_unknown_returns_error():
+    result = classify_visual_asset("asset_999")
+    assert result["error"] == "asset_not_found"
+    assert result["asset_id"] == "asset_999"

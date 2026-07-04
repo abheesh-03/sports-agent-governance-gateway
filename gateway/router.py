@@ -24,6 +24,7 @@ from tools.policies import search_policy
 from tools.responses import draft_fan_response
 from tools.schedule import get_schedule
 from tools.tickets import request_ticket_hold, search_ticket_options
+from tools.visual_assets import classify_visual_asset
 
 
 def _new_request_id() -> str:
@@ -48,6 +49,8 @@ def _execute_tool(tool_name: str, payload: Dict[str, Any]) -> Any:
         )
     if tool_name == "draft_fan_response":
         return draft_fan_response(context=payload.get("context", payload))
+    if tool_name == "classify_visual_asset":
+        return classify_visual_asset(asset_id=payload.get("asset_id", ""))
     if tool_name == "request_ticket_hold":
         return request_ticket_hold(
             ticket_id=payload.get("ticket_id", ""),

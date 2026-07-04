@@ -21,6 +21,7 @@ JSON files in the [`data/`](../data) directory.
 | `tickets.json`         | Fake ticket inventory tied to events.                |
 | `fans.json`            | Fictional fan profiles (invented names).             |
 | `content_library.json` | Fake content records (clips, interviews, posts).     |
+| `visual_assets.json`   | Fake visual assets with pre-computed classifications. |
 
 ## How the data is used
 
@@ -41,3 +42,6 @@ clears the in-memory cache).
 - It does not use real sports team data.
 - It does not integrate with real ticketing or CRM systems.
 - It does not require Claude, OpenAI, or any paid API for version 1.
+- It does not run a PyTorch model. The `classify_visual_asset` tool reads the
+  pre-computed, fake classifications in `visual_assets.json` to simulate a
+  governed call to an external vision service.

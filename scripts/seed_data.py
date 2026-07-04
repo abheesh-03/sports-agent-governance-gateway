@@ -23,6 +23,7 @@ DATA_FILES = {
     "tickets.json": "ticket listings",
     "fans.json": "fan profiles",
     "content_library.json": "content records",
+    "visual_assets.json": "visual assets",
 }
 
 

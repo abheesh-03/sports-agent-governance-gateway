@@ -83,6 +83,43 @@ curl -X POST http://localhost:8000/tools/call \
 }
 ```
 
+## Classify a visual asset (simulated PyTorch vision service)
+
+A content editor classifies a fake visual asset. The gateway governs the call
+(permission + risk + audit); the tool returns pre-computed metadata from a
+simulated external PyTorch vision service — no real model runs in this repo.
+
+```bash
+curl -X POST http://localhost:8000/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user_id": "editor_001",
+    "user_role": "content_editor",
+    "tool_name": "classify_visual_asset",
+    "input_payload": { "asset_id": "asset_001" }
+  }'
+```
+
+```json
+{
+  "decision": "allowed",
+  "status": "completed",
+  "risk_level": "medium",
+  "result": {
+    "asset_id": "asset_001",
+    "filename": "postgame_celebration.jpg",
+    "predicted_class": "event",
+    "confidence": 0.91,
+    "visual_tags": ["celebration", "crowd", "sponsor_board"],
+    "model_source": "simulated_pytorch_vision_service"
+  }
+}
+```
+
+A guest calling `classify_visual_asset` is denied with
+`blocked_permission_denied`, and an unknown `asset_id` returns a safe
+`{"error": "asset_not_found"}` result (still logged).
+
 ## Pending approval: request a ticket hold
 
 ```bash

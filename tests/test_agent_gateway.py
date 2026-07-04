@@ -55,6 +55,48 @@ def test_blocked_tool_call_is_denied_and_logged(client):
     assert any(log["decision"] == "blocked_permission_denied" for log in logs)
 
 
+def test_classify_visual_asset_executes_and_logs(client):
+    resp = client.post(
+        "/tools/call",
+        json={
+            "user_id": "editor_001",
+            "user_role": "content_editor",
+            "tool_name": "classify_visual_asset",
+            "input_payload": {"asset_id": "asset_001"},
+        },
+    )
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["decision"] == "allowed"
+    assert body["status"] == "completed"
+    assert body["risk_level"] == "medium"
+    assert body["result"]["predicted_class"] == "event"
+    assert body["result"]["model_source"] == "simulated_pytorch_vision_service"
+
+    # The classification must be recorded in the audit log.
+    logs = client.get("/audit-logs", params={"tool_name": "classify_visual_asset"}).json()
+    assert len(logs) == 1
+    assert logs[0]["decision"] == "allowed"
+    assert logs[0]["user_role"] == "content_editor"
+
+
+def test_guest_cannot_classify_visual_asset_via_api(client):
+    resp = client.post(
+        "/tools/call",
+        json={
+            "user_id": "guest_001",
+            "user_role": "guest",
+            "tool_name": "classify_visual_asset",
+            "input_payload": {"asset_id": "asset_001"},
+        },
+    )
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["decision"] == "blocked_permission_denied"
+    assert body["status"] == "blocked"
+    assert body["result"] is None
+
+
 def test_high_risk_tool_creates_approval_request(client):
     resp = client.post(
         "/tools/call",
