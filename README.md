@@ -151,6 +151,40 @@ Full curl examples are available in [`docs/api_examples.md`](docs/api_examples.m
 
 ---
 
+## Screenshots
+
+### API documentation
+
+The FastAPI Swagger UI exposes the governed agent, tool-call, audit, and approval endpoints.
+
+![Swagger Docs](docs/screenshots/swagger-docs.png)
+
+---
+
+### Permission denied example
+
+A guest attempting to access a protected fan profile is denied by the permission layer.
+
+![Blocked Request](docs/screenshots/blocked-request.png)
+
+---
+
+### Human approval queue
+
+A high-risk ticket hold request is routed to the approval queue instead of executing directly.
+
+![Pending Approvals](docs/screenshots/pending-approvals.png)
+
+---
+
+### Governance audit trail
+
+Every gateway decision is recorded for traceability, including blocked requests and approval-routed actions.
+
+![Audit Logs](docs/screenshots/audit-logs.png)
+
+---
+
 ## Example: agent request
 
 ```bash
@@ -312,5 +346,3 @@ The current version uses deterministic routing so it can run without API keys or
 * Add rate limiting
 * Add OpenTelemetry tracing
 * Deploy to Render, Railway, or AWS ECS
-h, a React approvals dashboard, Slack/email
-approval notifications, rate limiting, and OpenTelemetry tracing.
