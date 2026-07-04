@@ -30,6 +30,10 @@ sports_agent_gateway.db
 htmlcov/
 .tox/
 
+# Screenshot generation intermediates (temporary HTML pages + vendored assets).
+# The generated PNGs under docs/screenshots/ are committed; these are not.
+docs/screenshots/_pages/
+
 # IDE / OS
 .idea/
 .vscode/

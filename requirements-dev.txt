@@ -1,0 +1,10 @@
+# Development-only dependencies (not required to run the API).
+# Used to generate the README screenshots via scripts/capture_screenshots.py.
+#
+# After installing, download the browser binary once with:
+#   playwright install chromium
+playwright
+requests
+# Provides bundled Swagger UI assets so the /docs screenshot can be rendered
+# offline when the live docs page cannot reach its CDN.
+swagger-ui-bundle

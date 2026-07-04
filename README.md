@@ -131,6 +131,14 @@ Run with Docker:
 docker compose up --build
 ```
 
+Generate screenshots locally:
+
+```bash
+pip install -r requirements-dev.txt
+playwright install chromium
+python scripts/capture_screenshots.py
+```
+
 ---
 
 ## API endpoints
@@ -148,6 +156,42 @@ docker compose up --build
 | POST   | `/approvals/{approval_id}/reject`  | Reject a pending request           |
 
 Full curl examples are available in [`docs/api_examples.md`](docs/api_examples.md).
+
+---
+
+## Screenshots
+
+### FastAPI documentation
+
+![Swagger Docs](docs/screenshots/swagger-docs.png)
+
+### Registered tools
+
+![Tools Endpoint](docs/screenshots/tools-endpoint.png)
+
+### Blocked request
+
+A guest attempting to access a protected fan profile is denied by the permission layer.
+
+![Blocked Request](docs/screenshots/blocked-request.png)
+
+### High-risk action routed for approval
+
+A ticket hold request is classified as high risk and routed to the approval queue.
+
+![Pending Approval](docs/screenshots/pending-approval.png)
+
+### Audit logs
+
+Every gateway decision is logged for traceability.
+
+![Audit Logs](docs/screenshots/audit-logs.png)
+
+### Pending approvals
+
+High-risk actions remain in the approval queue until reviewed.
+
+![Pending Approvals](docs/screenshots/pending-approvals.png)
 
 ---
 
@@ -312,5 +356,3 @@ The current version uses deterministic routing so it can run without API keys or
 * Add rate limiting
 * Add OpenTelemetry tracing
 * Deploy to Render, Railway, or AWS ECS
-h, a React approvals dashboard, Slack/email
-approval notifications, rate limiting, and OpenTelemetry tracing.
