@@ -332,6 +332,27 @@ def collect_interactions():
         )
     )
 
+    # 6. Successful agent request: a natural-language message is routed through
+    #    the governed tools. Captured last so its tool calls do not appear in the
+    #    audit-logs screenshot above.
+    agent_payload = {
+        "user_id": "user_123",
+        "user_role": "fan_support_agent",
+        "message": "Find two tickets for the next game and tell me the bag policy.",
+    }
+    r = requests.post(f"{BASE_URL}/agent/request", json=agent_payload, timeout=5)
+    interactions.append(
+        dict(
+            filename="successful-agent-request.png",
+            title="Successful Agent Request",
+            method="POST",
+            endpoint="/agent/request",
+            request_body=agent_payload,
+            status_code=r.status_code,
+            response_body=r.json(),
+        )
+    )
+
     return interactions
 
 
