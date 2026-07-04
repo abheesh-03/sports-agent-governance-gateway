@@ -63,7 +63,7 @@ See [`docs/architecture.md`](docs/architecture.md) for a layer-by-layer explanat
 | ------------------- | ------------------------------------------------------- |
 | `guest`             | Search public schedule and venue policies               |
 | `fan_support_agent` | Search policies, tickets, schedule, and draft responses |
-| `content_editor`    | Search content records                                  |
+| `content_editor`    | Search content records and classify visual assets       |
 | `ticketing_manager` | Search tickets/schedule and request ticket holds        |
 | `admin`             | Access all tools, approvals, and audit logs             |
 
@@ -79,7 +79,13 @@ See [`docs/architecture.md`](docs/architecture.md) for a layer-by-layer explanat
 | `lookup_fan_profile`    | medium | no, but logged    |
 | `search_ticket_options` | medium | no                |
 | `draft_fan_response`    | medium | no                |
+| `classify_visual_asset` | medium | no                |
 | `request_ticket_hold`   | high   | yes               |
+
+> **Note on the vision tool:** This repo does not run a PyTorch model directly.
+> The `classify_visual_asset` tool simulates a governed call to an external
+> PyTorch vision service, matching the separate multimodal vision pipeline
+> project. It uses fake visual asset data only and adds no CV dependencies here.
 
 ---
 
@@ -131,14 +137,6 @@ Run with Docker:
 docker compose up --build
 ```
 
-Generate screenshots locally:
-
-```bash
-pip install -r requirements-dev.txt
-playwright install chromium
-python scripts/capture_screenshots.py
-```
-
 ---
 
 ## API endpoints
@@ -161,37 +159,43 @@ Full curl examples are available in [`docs/api_examples.md`](docs/api_examples.m
 
 ## Screenshots
 
-### FastAPI documentation
+### API documentation
+
+The FastAPI Swagger UI exposes the governed agent, tool-call, audit, and approval endpoints.
 
 ![Swagger Docs](docs/screenshots/swagger-docs.png)
 
-### Registered tools
+---
 
-![Tools Endpoint](docs/screenshots/tools-endpoint.png)
+### Successful governed agent request
 
-### Blocked request
+A fan support agent asks for tickets and venue policy information. The gateway routes the request through allowed tools and returns a structured response.
+
+![Successful Agent Request](docs/screenshots/successful-agent-request.png)
+
+---
+
+### Permission denied example
 
 A guest attempting to access a protected fan profile is denied by the permission layer.
 
 ![Blocked Request](docs/screenshots/blocked-request.png)
 
-### High-risk action routed for approval
+---
 
-A ticket hold request is classified as high risk and routed to the approval queue.
+### Human approval queue
 
-![Pending Approval](docs/screenshots/pending-approval.png)
-
-### Audit logs
-
-Every gateway decision is logged for traceability.
-
-![Audit Logs](docs/screenshots/audit-logs.png)
-
-### Pending approvals
-
-High-risk actions remain in the approval queue until reviewed.
+A high-risk ticket hold request is routed to the approval queue instead of executing directly.
 
 ![Pending Approvals](docs/screenshots/pending-approvals.png)
+
+---
+
+### Governance audit trail
+
+Every gateway decision is recorded for traceability, including blocked requests and approval-routed actions.
+
+![Audit Logs](docs/screenshots/audit-logs.png)
 
 ---
 
@@ -269,6 +273,26 @@ Expected decision:
 
 ---
 
+## Example: classify a visual asset
+
+A content editor classifies a fake visual asset through a governed call to a
+simulated external PyTorch vision service.
+
+```bash
+curl -X POST http://localhost:8000/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user_id": "editor_001",
+    "user_role": "content_editor",
+    "tool_name": "classify_visual_asset",
+    "input_payload": {
+      "asset_id": "asset_001"
+    }
+  }'
+```
+
+---
+
 ## View pending approvals
 
 ```bash
@@ -338,6 +362,7 @@ It does not currently include:
 * external LLM tool-calling
 * production deployment configuration
 * real fan or customer data
+* a real PyTorch vision model (the visual asset tool is a governed adapter to a simulated external service)
 
 The current version uses deterministic routing so it can run without API keys or external services.
 

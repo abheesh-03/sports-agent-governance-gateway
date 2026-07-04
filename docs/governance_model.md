@@ -24,7 +24,7 @@ a human, and everything recorded."
 | ------------------- | ----------------------------------------------------- |
 | `guest`             | Search public schedule and policies only              |
 | `fan_support_agent` | Policies, tickets, schedule, fan lookup, draft replies|
-| `content_editor`    | Search content records                                |
+| `content_editor`    | Search content records and classify visual assets     |
 | `ticketing_manager` | Tickets, schedule, fan lookup, request ticket holds   |
 | `admin`             | All tools, approvals, and audit logs                  |
 
@@ -48,7 +48,13 @@ Every tool is classified `low`, `medium`, or `high`.
 | `lookup_fan_profile`    | medium | no, but logged carefully |
 | `search_ticket_options` | medium | no                    |
 | `draft_fan_response`    | medium | no                    |
+| `classify_visual_asset` | medium | no                    |
 | `request_ticket_hold`   | high   | yes                   |
+
+`classify_visual_asset` is a governed *adapter* to an external vision service.
+The gateway treats it like any other tool (permission + risk + audit), even
+though the actual classification would run in a separate PyTorch vision service.
+No CV model runs in this repo; the tool returns fake pre-computed metadata.
 
 Any tool that is **not registered** is treated as high risk and requires
 approval — the system fails closed.

@@ -48,6 +48,15 @@ TOOLS: Dict[str, dict] = {
         "requires_approval": False,
         "allowed_roles": ["fan_support_agent", "admin"],
     },
+    "classify_visual_asset": {
+        "description": (
+            "Classify a fake visual asset using a simulated external PyTorch "
+            "vision service."
+        ),
+        "risk_level": "medium",
+        "requires_approval": False,
+        "allowed_roles": ["content_editor", "admin"],
+    },
     "request_ticket_hold": {
         "description": "Request a hold on tickets. High-risk, requires approval.",
         "risk_level": "high",
