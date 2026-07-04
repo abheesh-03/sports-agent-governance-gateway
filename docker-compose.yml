@@ -1,0 +1,9 @@
+services:
+  sports-agent-gateway:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./sports_agent_gateway.db
+      - APP_NAME=Sports Agent Governance Gateway
+      - DEFAULT_ORG=Northstar Athletics

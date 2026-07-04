@@ -1,0 +1,26 @@
+[
+  {
+    "policy_id": "pol_001",
+    "category": "bag_policy",
+    "title": "Clear Bag Policy",
+    "body": "Small clear bags are allowed. Large backpacks, duffel bags, and oversized totes are not permitted inside Northstar Arena."
+  },
+  {
+    "policy_id": "pol_002",
+    "category": "parking",
+    "title": "Game Day Parking",
+    "body": "Parking lots open three hours before the event. Mobile parking passes are recommended for faster entry."
+  },
+  {
+    "policy_id": "pol_003",
+    "category": "accessibility",
+    "title": "Accessible Seating",
+    "body": "Accessible seating is available throughout the venue. Guests can contact fan support for seating assistance."
+  },
+  {
+    "policy_id": "pol_004",
+    "category": "mobile_tickets",
+    "title": "Mobile Ticket Entry",
+    "body": "All tickets are mobile-only. Screenshots may not scan correctly. Fans should use the official ticket wallet."
+  }
+]

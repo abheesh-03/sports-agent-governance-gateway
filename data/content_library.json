@@ -1,0 +1,23 @@
+[
+  {
+    "content_id": "cnt_001",
+    "title": "Postgame Celebration Clip",
+    "content_type": "video_clip_description",
+    "body": "A late-game celebration clip featuring crowd reactions, bench excitement, and a sponsor board visible in the background.",
+    "tags": ["celebration", "crowd", "sponsor", "highlight"]
+  },
+  {
+    "content_id": "cnt_002",
+    "title": "Player Interview: Avery Cole",
+    "content_type": "interview_transcript",
+    "body": "Avery Cole discusses preparation, team chemistry, and fan support after the rivalry game.",
+    "tags": ["interview", "player", "fan_engagement"]
+  },
+  {
+    "content_id": "cnt_003",
+    "title": "Family Night Social Draft",
+    "content_type": "social_post",
+    "body": "Promotional copy for Family Night with ticket bundles, mascot appearances, and youth fan activities.",
+    "tags": ["family_night", "ticketing", "promotion"]
+  }
+]

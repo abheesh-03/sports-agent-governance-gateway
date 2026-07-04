@@ -1,0 +1,32 @@
+[
+  {
+    "event_id": "evt_1001",
+    "home_team": "Northstar Foxes",
+    "away_team": "Lakeview Bears",
+    "date": "2026-07-15",
+    "time": "19:30",
+    "venue": "Northstar Arena",
+    "event_type": "regular_season",
+    "status": "scheduled"
+  },
+  {
+    "event_id": "evt_1002",
+    "home_team": "Northstar Foxes",
+    "away_team": "Metro City Hawks",
+    "date": "2026-07-22",
+    "time": "20:00",
+    "venue": "Northstar Arena",
+    "event_type": "rivalry_game",
+    "status": "scheduled"
+  },
+  {
+    "event_id": "evt_1003",
+    "home_team": "Northstar Foxes",
+    "away_team": "Riverfront Wolves",
+    "date": "2026-08-01",
+    "time": "18:00",
+    "venue": "Northstar Arena",
+    "event_type": "family_night",
+    "status": "scheduled"
+  }
+]
